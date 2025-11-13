@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Car;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\Ticket;
 
+//php artisan make:controller Api/V1/CarController --api
 class CarController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        
+        return response()->json(Car::all());
     }
 
     /**

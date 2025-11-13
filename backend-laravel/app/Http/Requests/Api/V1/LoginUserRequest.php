@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+//php artisan make:request Api/V1/LoginUserRequest
 class LoginUserRequest extends FormRequest
 {
     /**

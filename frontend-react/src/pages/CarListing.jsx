@@ -1,30 +1,27 @@
-// App.js
+import React, { useEffect, useState } from 'react';
+import { getCars } from '../api/auth';
 
-import React from 'react';
-import CarListing from './CarListing';
-// Assuming you have a default image for the example
-import teslaImage from './assets/tesla-model-s.jpg'; 
+const Cars = () => {
+  const [cars, setCars] = useState([]);
+  const [error, setError] = useState('');
 
-function Cars() {
-  const exampleCarData = {
-    imageUrl: 'https://example.com/images/tesla-model-s.jpg', 
-    carName: '2024 Tesla Model S Plaid',
-    stockNumber: 'TSLA007',
-  };
+  useEffect(() => {
+    getCars()
+      .then((res) => setCars(res.data))
+      .catch((err) => setError(err.response?.data?.message || 'Unauthenticated'));
+  }, []);
+
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
-    <div className="car-listings-page">
-      <h1>Featured Inventory</h1>
-      
-      {/* Renders the car listing with the required data */}
-      <CarListing 
-        imageUrl={exampleCarData.imageUrl}
-        carName={exampleCarData.carName}
-        stockNumber={exampleCarData.stockNumber}
-      />
-      
-    </div>
+    <ul>
+      {cars.map((car) => (
+        <li key={car.id}>
+          {car.name} - {car.model}
+        </li>
+      ))}
+    </ul>
   );
-}
+};
 
 export default Cars;

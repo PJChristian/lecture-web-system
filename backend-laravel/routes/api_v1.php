@@ -5,8 +5,10 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->apiResource('tickets', CarController::class);
+//Private(Authenticated) Routes
+//Route::middleware('auth:sanctum')->apiResource('cars', CarController::class);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware(['auth:sanctum', 'role:admin'])->apiResource('cars', CarController::class);
+
+//Public Routes
+//Route::get('/carlisting', [CarController::class, 'index']);

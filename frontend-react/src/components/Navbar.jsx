@@ -31,7 +31,7 @@ export const Navbar = () => {
           </NavLink>
 
           <NavLink
-            to="/listing"
+            to="/cars"
             className={({ isActive }) =>
               `font-medium transition-colors ${
                 isActive
@@ -40,7 +40,7 @@ export const Navbar = () => {
               }`
             }
           >
-            Listing
+            Cars
           </NavLink>
         </div>
 

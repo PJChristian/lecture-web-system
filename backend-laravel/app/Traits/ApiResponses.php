@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+//php artisan make:trait Traits/ApiResponses
 trait ApiResponses
 {
     protected function ok($message, $data = []) {

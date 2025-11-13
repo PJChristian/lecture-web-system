@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+//php artisan make:controller Api/V1/AuthController
 class AuthController extends Controller
 {
     use ApiResponses;
@@ -22,22 +23,69 @@ class AuthController extends Controller
             return $this->error('Invalid credentials', 401);
         }
 
-        $user = User::firstWhere('email', $request->email);
+        $user = User::where('email', $request->email)->first();
 
-        return $this->ok(
-            'Authenticated',
-            [
-                'token' =>$user->createToken(
-                    'API token for ' . $user->email,
-                    ['*'],
-                    now()->addMonth())->plainTextToken
+        // Create session instead of token
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+        
+        return $this->ok('Authenticated', [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                //'role' => $user->role,
+                //'avatar' => $user->avatar_url,
             ]
-        );
+        ]);
     }
+        // $user = User::where('email', $request->email)->first();
+
+        // if (! $user || ! Hash::check($request->password, $user->password)) {
+        //     return response()->json(['message' => 'Invalid credentials'], 401);
+        // }
+
+        // $token = $user->createToken('api-token')->plainTextToken;
+
+        // return response()->json([
+        //     'token' => $token,
+        //     'user' => $user,
+        // ]);
+
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+
+        // if (Auth::attempt($credentials)) {
+        //     $request->session()->regenerate();
+        //     return response()->json([
+        //         'message' => 'Authenticated',
+        //         'user' => Auth::user(),
+        //     ]);
+        // }
+
+        // return response()->json(['message' => 'Invalid credentials'], 401);
+    
+    // $user = User::firstWhere('email', $request->email);
+
+    // $token = $user->createToken('auth_token')->plainTextToken;
+
+    // cookie()->queue('auth_token', $token, 60 * 24 * 30, '/', null, true, true);
+
+    // return $this->ok('Authenticated', ['user' => $user]);
+
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        // If using tokens, delete the current token
+        //$request->user()->currentAccessToken()->delete();
+
+        // If using session/cookie auth via Sanctum
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return $this->ok('Logged out successfully');
     }
@@ -57,7 +105,7 @@ class AuthController extends Controller
         );
     }
 
- 
+
 
     /**
      * Display a listing of the resource.
